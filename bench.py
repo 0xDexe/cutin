@@ -30,10 +30,10 @@ def text(rng, n):
     return " ".join(rng.choice(WORDS) for _ in range(n))
 
 
-def post(args, body, on_chunk=None):
+def post(args, body, on_chunk=None, timeout=600):
     """POST a chat completion. If streaming, on_chunk(chunk) may return False to
     hang up mid-stream, which makes vLLM abort the request (barge-in)."""
-    conn = http.client.HTTPConnection(args.host, args.port, timeout=600)
+    conn = http.client.HTTPConnection(args.host, args.port, timeout=timeout)
     try:
         conn.request(
             "POST",
@@ -119,7 +119,10 @@ def voice_session(args, sid, records):
                 return False  # user interrupts: hang up
 
         try:
-            post(args, body, on_chunk)
+            post(args, body, on_chunk, timeout=args.ttft_timeout_s or 600)
+        except TimeoutError as e:
+            # No token for ttft_timeout_s: the caller gives up (counts as an SLO miss).
+            rec["err"] = "ttft_timeout" if rec["ttft"] is None else repr(e)
         except Exception as e:
             rec["err"] = repr(e)
         records.append(rec)
@@ -169,9 +172,11 @@ def summarize(args, records, batch_done, dur):
     with_usage = [r for r in records if r["prompt"] and r["cached"] is not None]
     return {
         "label": args.label,
+        "batch_rps": args.batch_rps,
         "slo_ms": args.slo_ms,
         "turns": len(records),
-        "errors": sum(1 for r in records if r["err"]),
+        "errors": sum(1 for r in records if r["err"] and r["err"] != "ttft_timeout"),
+        "ttft_timeouts": sum(1 for r in records if r["err"] == "ttft_timeout"),
         "barge_ins": sum(1 for r in records if r["barged"]),
         "slo_pct": attain(records),
         "slo_pct_first_turn": attain([r for r in records if r["turn"] == 0]),
@@ -187,7 +192,7 @@ def summarize(args, records, batch_done, dur):
     }
 
 
-COLS = ["label", "turns", "errors", "barge_ins", "slo_pct", "slo_pct_first_turn",
+COLS = ["label", "batch_rps", "turns", "errors", "ttft_timeouts", "barge_ins", "slo_pct", "slo_pct_first_turn",
         "slo_pct_after_barge", "ttft_p50_ms", "ttft_p95_ms", "ttft_p99_ms",
         "cached_prompt_pct", "batch_reqs_done", "batch_tok_per_s"]
 
@@ -220,6 +225,9 @@ def main():
     ap.add_argument("--batch-rps", type=float, default=2.0, help="background batch arrivals per second (0 = none)")
     ap.add_argument("--batch-words", type=int, default=3000)
     ap.add_argument("--batch-max-tokens", type=int, default=256)
+    ap.add_argument("--ttft-timeout-s", type=float, default=0,
+                    help="hang up a voice turn with no first token after this long (0 = wait forever)")
+    ap.add_argument("--out-dir", default="results")
     args = ap.parse_args()
 
     if args.report:
@@ -238,8 +246,8 @@ def main():
     stop.set()
     summary = summarize(args, records, batch_done, time.perf_counter() - t0)
 
-    os.makedirs("results", exist_ok=True)
-    path = f"results/{args.label}.json"
+    os.makedirs(args.out_dir, exist_ok=True)
+    path = f"{args.out_dir}/{args.label}.json"
     with open(path, "w") as f:
         json.dump({"summary": summary, "args": vars(args), "turns": records}, f, indent=1)
     report([summary])

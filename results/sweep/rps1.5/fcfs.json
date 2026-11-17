@@ -1,0 +1,1007 @@
+{
+ "summary": {
+  "label": "fcfs",
+  "batch_rps": 1.5,
+  "slo_ms": 300,
+  "turns": 96,
+  "errors": 0,
+  "ttft_timeouts": 55,
+  "barge_ins": 20,
+  "slo_pct": 0.0,
+  "slo_pct_first_turn": 0.0,
+  "slo_pct_after_barge": 0.0,
+  "ttft_p50_ms": 13879.9,
+  "ttft_p95_ms": 29185.8,
+  "ttft_p99_ms": 29858.6,
+  "cached_prompt_pct": 0.0,
+  "batch_reqs_done": 247,
+  "batch_tok_per_s": 268.8,
+  "duration_s": 235.2
+ },
+ "args": {
+  "report": null,
+  "label": "fcfs",
+  "host": "localhost",
+  "port": 21778,
+  "model": "Qwen/Qwen2.5-7B-Instruct",
+  "slo_ms": 300,
+  "deadlines": false,
+  "prefill": false,
+  "prefill_every": 3,
+  "prefill_slack_ms": 1000,
+  "sessions": 16,
+  "turns": 6,
+  "stagger_s": 10.0,
+  "sys_words": 1500,
+  "word_s": 0.3,
+  "max_tokens": 256,
+  "barge_p": 0.4,
+  "batch_rps": 1.5,
+  "batch_words": 3000,
+  "batch_max_tokens": 256,
+  "ttft_timeout_s": 30.0,
+  "out_dir": "results/sweep/rps1.5"
+ },
+ "turns": [
+  {
+   "sid": 7,
+   "turn": 0,
+   "after_barge": false,
+   "ttft": 1.2218774469802156,
+   "prompt": 1535,
+   "cached": null,
+   "barged": true,
+   "err": null
+  },
+  {
+   "sid": 13,
+   "turn": 0,
+   "after_barge": false,
+   "ttft": 2.0772819969861303,
+   "prompt": 1541,
+   "cached": null,
+   "barged": true,
+   "err": null
+  },
+  {
+   "sid": 11,
+   "turn": 0,
+   "after_barge": false,
+   "ttft": 2.7801103249948937,
+   "prompt": 1538,
+   "cached": null,
+   "barged": true,
+   "err": null
+  },
+  {
+   "sid": 5,
+   "turn": 0,
+   "after_barge": false,
+   "ttft": 3.454055112990318,
+   "prompt": 1535,
+   "cached": null,
+   "barged": true,
+   "err": null
+  },
+  {
+   "sid": 10,
+   "turn": 0,
+   "after_barge": false,
+   "ttft": 3.065629495016765,
+   "prompt": 1540,
+   "cached": null,
+   "barged": true,
+   "err": null
+  },
+  {
+   "sid": 9,
+   "turn": 0,
+   "after_barge": false,
+   "ttft": 3.2492900369979907,
+   "prompt": 1543,
+   "cached": null,
+   "barged": true,
+   "err": null
+  },
+  {
+   "sid": 12,
+   "turn": 0,
+   "after_barge": false,
+   "ttft": 9.737973292998504,
+   "prompt": 1547,
+   "cached": null,
+   "barged": true,
+   "err": null
+  },
+  {
+   "sid": 14,
+   "turn": 0,
+   "after_barge": false,
+   "ttft": 0.3306050469982438,
+   "prompt": 1537,
+   "cached": 0,
+   "barged": false,
+   "err": null
+  },
+  {
+   "sid": 1,
+   "turn": 0,
+   "after_barge": false,
+   "ttft": 0.3004880509979557,
+   "prompt": 1536,
+   "cached": 0,
+   "barged": false,
+   "err": null
+  },
+  {
+   "sid": 8,
+   "turn": 0,
+   "after_barge": false,
+   "ttft": 0.6396333700104151,
+   "prompt": 1536,
+   "cached": 0,
+   "barged": false,
+   "err": null
+  },
+  {
+   "sid": 3,
+   "turn": 0,
+   "after_barge": false,
+   "ttft": 2.8426991289888974,
+   "prompt": 1542,
+   "cached": 0,
+   "barged": false,
+   "err": null
+  },
+  {
+   "sid": 2,
+   "turn": 0,
+   "after_barge": false,
+   "ttft": 13.050876464985777,
+   "prompt": 1543,
+   "cached": null,
+   "barged": true,
+   "err": null
+  },
+  {
+   "sid": 4,
+   "turn": 0,
+   "after_barge": false,
+   "ttft": 3.1257455490122084,
+   "prompt": 1546,
+   "cached": 0,
+   "barged": false,
+   "err": null
+  },
+  {
+   "sid": 15,
+   "turn": 0,
+   "after_barge": false,
+   "ttft": 12.962502455018694,
+   "prompt": 1548,
+   "cached": null,
+   "barged": true,
+   "err": null
+  },
+  {
+   "sid": 11,
+   "turn": 1,
+   "after_barge": true,
+   "ttft": 13.23237932100892,
+   "prompt": 1567,
+   "cached": null,
+   "barged": true,
+   "err": null
+  },
+  {
+   "sid": 9,
+   "turn": 1,
+   "after_barge": true,
+   "ttft": 13.879907541995635,
+   "prompt": 1571,
+   "cached": null,
+   "barged": true,
+   "err": null
+  },
+  {
+   "sid": 10,
+   "turn": 1,
+   "after_barge": true,
+   "ttft": 13.98138146198471,
+   "prompt": 1573,
+   "cached": null,
+   "barged": true,
+   "err": null
+  },
+  {
+   "sid": 0,
+   "turn": 0,
+   "after_barge": false,
+   "ttft": 12.291698768007336,
+   "prompt": 1542,
+   "cached": 0,
+   "barged": false,
+   "err": null
+  },
+  {
+   "sid": 7,
+   "turn": 1,
+   "after_barge": true,
+   "ttft": 12.189217182982247,
+   "prompt": 1567,
+   "cached": 0,
+   "barged": false,
+   "err": null
+  },
+  {
+   "sid": 6,
+   "turn": 0,
+   "after_barge": false,
+   "ttft": 12.267844813002739,
+   "prompt": 1547,
+   "cached": 0,
+   "barged": false,
+   "err": null
+  },
+  {
+   "sid": 13,
+   "turn": 1,
+   "after_barge": true,
+   "ttft": 13.181748661008896,
+   "prompt": 1574,
+   "cached": 0,
+   "barged": false,
+   "err": null
+  },
+  {
+   "sid": 8,
+   "turn": 1,
+   "after_barge": false,
+   "ttft": 17.700512111012358,
+   "prompt": 1813,
+   "cached": null,
+   "barged": true,
+   "err": null
+  },
+  {
+   "sid": 5,
+   "turn": 1,
+   "after_barge": true,
+   "ttft": 13.496944896003697,
+   "prompt": 1562,
+   "cached": 0,
+   "barged": false,
+   "err": null
+  },
+  {
+   "sid": 1,
+   "turn": 1,
+   "after_barge": false,
+   "ttft": 17.913895542995306,
+   "prompt": 1791,
+   "cached": null,
+   "barged": true,
+   "err": null
+  },
+  {
+   "sid": 15,
+   "turn": 1,
+   "after_barge": true,
+   "ttft": 18.263462692004396,
+   "prompt": 1574,
+   "cached": null,
+   "barged": true,
+   "err": null
+  },
+  {
+   "sid": 11,
+   "turn": 2,
+   "after_barge": true,
+   "ttft": 25.78173690100084,
+   "prompt": 1594,
+   "cached": null,
+   "barged": true,
+   "err": null
+  },
+  {
+   "sid": 3,
+   "turn": 1,
+   "after_barge": false,
+   "ttft": 26.250233099010075,
+   "prompt": 1804,
+   "cached": null,
+   "barged": true,
+   "err": null
+  },
+  {
+   "sid": 12,
+   "turn": 1,
+   "after_barge": true,
+   "ttft": 18.929453921999084,
+   "prompt": 1590,
+   "cached": 0,
+   "barged": false,
+   "err": null
+  },
+  {
+   "sid": 14,
+   "turn": 1,
+   "after_barge": false,
+   "ttft": 18.36136182700284,
+   "prompt": 1804,
+   "cached": 0,
+   "barged": false,
+   "err": null
+  },
+  {
+   "sid": 2,
+   "turn": 1,
+   "after_barge": true,
+   "ttft": 18.319940315996064,
+   "prompt": 1571,
+   "cached": 0,
+   "barged": false,
+   "err": null
+  },
+  {
+   "sid": 4,
+   "turn": 1,
+   "after_barge": false,
+   "ttft": 26.36959788898821,
+   "prompt": 1814,
+   "cached": 0,
+   "barged": false,
+   "err": null
+  },
+  {
+   "sid": 10,
+   "turn": 2,
+   "after_barge": true,
+   "ttft": 25.967572705994826,
+   "prompt": 1604,
+   "cached": 0,
+   "barged": false,
+   "err": null
+  },
+  {
+   "sid": 6,
+   "turn": 1,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 0,
+   "turn": 1,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 8,
+   "turn": 2,
+   "after_barge": true,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 7,
+   "turn": 2,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 9,
+   "turn": 2,
+   "after_barge": true,
+   "ttft": 27.535540849989047,
+   "prompt": 1605,
+   "cached": 0,
+   "barged": false,
+   "err": null
+  },
+  {
+   "sid": 1,
+   "turn": 2,
+   "after_barge": true,
+   "ttft": 28.47413397501805,
+   "prompt": 1824,
+   "cached": null,
+   "barged": true,
+   "err": null
+  },
+  {
+   "sid": 15,
+   "turn": 2,
+   "after_barge": true,
+   "ttft": 28.843559920991538,
+   "prompt": 1622,
+   "cached": null,
+   "barged": true,
+   "err": null
+  },
+  {
+   "sid": 3,
+   "turn": 2,
+   "after_barge": true,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 5,
+   "turn": 2,
+   "after_barge": false,
+   "ttft": 29.437788073002594,
+   "prompt": 1820,
+   "cached": 0,
+   "barged": false,
+   "err": null
+  },
+  {
+   "sid": 12,
+   "turn": 2,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 13,
+   "turn": 2,
+   "after_barge": false,
+   "ttft": 29.104646419989876,
+   "prompt": 1845,
+   "cached": 0,
+   "barged": false,
+   "err": null
+  },
+  {
+   "sid": 14,
+   "turn": 2,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 11,
+   "turn": 3,
+   "after_barge": true,
+   "ttft": 24.675378023006488,
+   "prompt": 1627,
+   "cached": 0,
+   "barged": false,
+   "err": null
+  },
+  {
+   "sid": 4,
+   "turn": 2,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 6,
+   "turn": 2,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 9,
+   "turn": 3,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 10,
+   "turn": 3,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 0,
+   "turn": 2,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 1,
+   "turn": 3,
+   "after_barge": true,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 8,
+   "turn": 3,
+   "after_barge": false,
+   "ttft": 29.858573120000074,
+   "prompt": 1861,
+   "cached": null,
+   "barged": true,
+   "err": null
+  },
+  {
+   "sid": 7,
+   "turn": 3,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 15,
+   "turn": 3,
+   "after_barge": true,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 2,
+   "turn": 2,
+   "after_barge": false,
+   "ttft": 29.185789413983002,
+   "prompt": 1848,
+   "cached": 0,
+   "barged": false,
+   "err": null
+  },
+  {
+   "sid": 5,
+   "turn": 3,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 12,
+   "turn": 3,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 13,
+   "turn": 3,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 14,
+   "turn": 3,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 11,
+   "turn": 4,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 3,
+   "turn": 3,
+   "after_barge": false,
+   "ttft": 26.952219087979756,
+   "prompt": 1850,
+   "cached": 0,
+   "barged": false,
+   "err": null
+  },
+  {
+   "sid": 4,
+   "turn": 3,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 9,
+   "turn": 4,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 8,
+   "turn": 4,
+   "after_barge": true,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 10,
+   "turn": 4,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 6,
+   "turn": 3,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 0,
+   "turn": 3,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 7,
+   "turn": 4,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 1,
+   "turn": 4,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 15,
+   "turn": 4,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 2,
+   "turn": 3,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 5,
+   "turn": 4,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 12,
+   "turn": 4,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 14,
+   "turn": 4,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 13,
+   "turn": 4,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 11,
+   "turn": 5,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 3,
+   "turn": 4,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 4,
+   "turn": 4,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 9,
+   "turn": 5,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 8,
+   "turn": 5,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 10,
+   "turn": 5,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 0,
+   "turn": 4,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 6,
+   "turn": 4,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 1,
+   "turn": 5,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 7,
+   "turn": 5,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 15,
+   "turn": 5,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 2,
+   "turn": 4,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 14,
+   "turn": 5,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 12,
+   "turn": 5,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 5,
+   "turn": 5,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 13,
+   "turn": 5,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 3,
+   "turn": 5,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 4,
+   "turn": 5,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 0,
+   "turn": 5,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 6,
+   "turn": 5,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  },
+  {
+   "sid": 2,
+   "turn": 5,
+   "after_barge": false,
+   "ttft": null,
+   "prompt": null,
+   "cached": null,
+   "barged": false,
+   "err": "ttft_timeout"
+  }
+ ]
+}

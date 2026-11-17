@@ -1,0 +1,15 @@
+label                         fcfs          voice  voice+prefill    voice-nopin
+batch_rps                     0.25           0.25           0.25           0.25
+turns                           96             96             96             96
+errors                           0              0              0              0
+ttft_timeouts                    0              0              0              0
+barge_ins                       46             46             46             46
+slo_pct                       86.5           89.6           92.7           86.5
+slo_pct_first_turn            75.0           87.5           87.5           75.0
+slo_pct_after_barge           87.8           85.4           92.7           87.8
+ttft_p50_ms                  110.5          111.2           96.6          112.8
+ttft_p95_ms                  448.4          434.3          357.7          421.0
+ttft_p99_ms                  593.7          563.2          603.2          583.6
+cached_prompt_pct             79.3           83.6           99.3           79.6
+batch_reqs_done                 31             31             31             31
+batch_tok_per_s               81.4           81.5           80.3           81.5
