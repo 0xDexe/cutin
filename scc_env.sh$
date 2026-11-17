@@ -1,0 +1,1 @@
+module load cuda/12.8 tail -f logs/voice-sched.8695903.log

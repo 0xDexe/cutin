@@ -1,0 +1,10 @@
+cache/
+.venv/
+venv/
+logs/
+*.log
+voice-sched.o*
+voice-sched.e*
+__pycache__/
+*.pyc
+.DS_Store
