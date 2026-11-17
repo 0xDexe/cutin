@@ -3,6 +3,7 @@
 #   qsub -P <your_project> run_all.sh
 # Env (pass with qsub -v): BENCH_ARGS = extra bench.py options,
 #                          OUT = results folder (default: results)
+#                          ARMS = which arms to run (default: all five)
 #$ -N voice-sched
 #$ -l h_rt=03:00:00
 #$ -pe omp 8
@@ -38,10 +39,16 @@ run_arm() {  # run_arm <label> <serve mode> [extra env] -- [bench args...]
   grep "voice SLO attainment" "${SLOG}_$label.log" | tail -1
 }
 
-run_arm fcfs          baseline                   --
-run_arm voice         voice                      -- --deadlines
-run_arm voice+prefill voice                      -- --deadlines --prefill
-run_arm voice-nopin   voice VOICE_PIN_TTL_S=0    -- --deadlines   # ablation: no KV pinning
+ARMS=${ARMS:-"fcfs static voice-nopin voice voice+prefill"}
+for arm in $ARMS; do
+  case $arm in
+    fcfs)          run_arm fcfs          baseline                -- ;;
+    static)        run_arm static        priority                -- --static-priority ;;
+    voice-nopin)   run_arm voice-nopin   voice VOICE_PIN_TTL_S=0 -- --deadlines ;;  # no KV pinning
+    voice)         run_arm voice         voice                   -- --deadlines ;;
+    voice+prefill) run_arm voice+prefill voice                   -- --deadlines --prefill ;;
+    *) echo "unknown arm: $arm" ;;
+  esac
+done
 
-python bench.py --report "$OUT"/fcfs.json "$OUT"/voice.json "$OUT"/voice+prefill.json "$OUT"/voice-nopin.json \
-  | tee "$OUT"/summary.txt
+python bench.py --report "$OUT"/{fcfs,static,voice-nopin,voice,voice+prefill}.json | tee "$OUT"/summary.txt

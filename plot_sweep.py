@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""Plot the load sweep: python plot_sweep.py [--slo-ms 300] [--dir results/sweep]
+"""Plot the load sweep: python plot_sweep.py [--dir results/sweep] [--out sweep.png]
 
-Reads <dir>/rps*/<arm>.json, writes sweep.png and prints a markdown table.
+Reads <dir>/rps*/<arm>.json, writes the figure and prints markdown tables.
+Each turn is scored against its own SLO class (--slo-ms overrides it for every turn).
 Turns that hit the TTFT timeout count as misses and as TTFT = timeout in percentiles.
 """
 import argparse
@@ -15,13 +16,14 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-# arm -> (legend name, color, line style). Baseline is neutral gray + dashed;
-# the three scheduler arms take categorical slots 1-3 in fixed order.
+# arm -> (legend name, color, line style). Stock-vLLM baselines are dashed
+# (FCFS in neutral gray); the rest take categorical slots 1-4 in fixed order.
 ARMS = {
-    "fcfs": ("stock vLLM (FCFS)", "#8f8e89", "--"),
-    "voice-nopin": ("deadlines only", "#2a78d6", "-"),
-    "voice": ("+ KV pinning", "#eb6834", "-"),
-    "voice+prefill": ("+ partial-ASR prefill", "#1baf7a", "-"),
+    "fcfs": ("stock vLLM, FCFS", "#8f8e89", "--"),
+    "static": ("stock vLLM, static priority", "#2a78d6", "--"),
+    "voice-nopin": ("deadlines (EDF)", "#eb6834", "-"),
+    "voice": ("+ KV pinning", "#1baf7a", "-"),
+    "voice+prefill": ("+ partial-ASR prefill", "#eda100", "-"),
 }
 INK, INK2, GRID = "#0b0b0b", "#52514e", "#e6e5e1"
 
@@ -34,9 +36,15 @@ def pct(xs, p):
 def load(path, slo_ms):
     d = json.load(open(path))
     cap = d["args"].get("ttft_timeout_s") or 600
-    t = [r["ttft"] if r["ttft"] is not None else cap for r in d["turns"]]
+    default = d["args"].get("slo_ms", 300)
+    turns = d["turns"]
+    t = [r["ttft"] if r["ttft"] is not None else cap for r in turns]
+    slo = [slo_ms or r.get("slo_ms", default) for r in turns]
+    hit = [x * 1e3 <= s for x, s in zip(t, slo)]
+    by_class = {c: 100 * sum(h for h, s in zip(hit, slo) if s == c) / slo.count(c) for c in set(slo)}
     return {
-        "slo": 100 * sum(x * 1e3 <= slo_ms for x in t) / len(t),
+        "slo": 100 * sum(hit) / len(hit),
+        "classes": by_class,
         "p50": pct(t, 50) * 1e3,
         "p95": pct(t, 95) * 1e3,
         "batch": d["summary"]["batch_tok_per_s"],
@@ -47,7 +55,7 @@ def load(path, slo_ms):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dir", default="results/sweep")
-    ap.add_argument("--slo-ms", type=int, default=300)
+    ap.add_argument("--slo-ms", type=int, default=None, help="score every turn against this SLO")
     ap.add_argument("--out", default="sweep.png")
     args = ap.parse_args()
 
@@ -63,8 +71,10 @@ def main():
     plt.rcParams.update({"font.size": 10, "axes.edgecolor": INK2, "axes.labelcolor": INK2,
                          "xtick.color": INK2, "ytick.color": INK2, "font.family": "DejaVu Sans"})
     fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+    classes = sorted({c for arm in data.values() for m in arm.values() for c in m["classes"]})
+    slo_desc = " / ".join(f"{c}" for c in classes) + " ms" + (" classes" if len(classes) > 1 else "")
     panels = [
-        ("slo", f"TTFT SLO attainment ({args.slo_ms} ms)", "% of voice turns", "linear"),
+        ("slo", f"TTFT SLO attainment ({slo_desc})", "% of voice turns", "linear"),
         ("p95", "p95 TTFT", "ms (log scale)", "log"),
         ("batch", "Batch throughput", "output tokens / s", "linear"),
     ]
@@ -98,7 +108,7 @@ def main():
     print("saved", args.out)
 
     loads = sorted({r for arm in data.values() for r in arm})
-    for key, label, fmt in [("slo", f"SLO attainment ({args.slo_ms} ms)", "{:.0f}%"),
+    for key, label, fmt in [("slo", f"SLO attainment ({slo_desc})", "{:.0f}%"),
                             ("p50", "TTFT p50 (ms)", "{:,.0f}"), ("p95", "TTFT p95 (ms)", "{:,.0f}"),
                             ("batch", "batch output tok/s", "{:.0f}")]:
         print(f"\n**{label}**\n")
@@ -107,6 +117,14 @@ def main():
         for r in loads:
             cells = [fmt.format(data[a][r][key]) if r in data[a] else "-" for a in ARMS if a in data]
             print(f"| {r:g} | " + " | ".join(cells) + " |")
+    if len(classes) > 1:
+        for c in classes:
+            print(f"\n**SLO attainment, {c} ms class**\n")
+            print("| batch req/s | " + " | ".join(ARMS[a][0] for a in ARMS if a in data) + " |")
+            print("|---" * (1 + len(data)) + "|")
+            for r in loads:
+                cells = [f"{data[a][r]['classes'][c]:.0f}%" if r in data[a] else "-" for a in ARMS if a in data]
+                print(f"| {r:g} | " + " | ".join(cells) + " |")
 
 
 if __name__ == "__main__":

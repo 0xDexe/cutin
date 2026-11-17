@@ -1,15 +1,16 @@
-label                         fcfs          voice  voice+prefill    voice-nopin
-batch_rps                      1.0            1.0            1.0            1.0
-turns                           96             96             96             96
-errors                           0              0              0              0
-ttft_timeouts                    0              0              0              0
-barge_ins                       46             46             46             46
-slo_pct                        5.2           30.2           53.1            4.2
-slo_pct_first_turn            31.2           31.2           50.0           25.0
-slo_pct_after_barge            0.0           36.6           58.5            0.0
-ttft_p50_ms                11556.1          687.3          273.9         1060.7
-ttft_p95_ms                16470.5         3387.3         1041.4         2683.6
-ttft_p99_ms                16840.6         5949.2         2497.9         4510.6
-cached_prompt_pct              1.6           69.9           99.2            3.2
-batch_reqs_done                157             98            101            114
-batch_tok_per_s              217.0          193.3          193.6          195.1
+label                          fcfs          static     voice-nopin           voice   voice+prefill
+batch_rps                       1.0             1.0             1.0             1.0             1.0
+turns                            96              96              96              96              96
+errors                            0               0               0               0               0
+ttft_timeouts                     0               0               0               0               0
+barge_ins                        46              46              46              46              46
+slo_pct                         5.2             5.2             4.2            30.2            53.1
+slo_pct_first_turn             31.2            31.2            25.0            31.2            50.0
+slo_pct_after_barge             0.0             0.0             0.0            36.6            58.5
+slo_by_class                   None            None            None            None            None
+ttft_p50_ms                 11556.1           993.4          1060.7           687.3           273.9
+ttft_p95_ms                 16470.5          2613.2          2683.6          3387.3          1041.4
+ttft_p99_ms                 16840.6          3554.4          4510.6          5949.2          2497.9
+cached_prompt_pct               1.6             3.2             3.2            69.9            99.2
+batch_reqs_done                 157             114             114              98             101
+batch_tok_per_s               217.0           194.7           195.1           193.3           193.6

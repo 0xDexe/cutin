@@ -4,6 +4,8 @@
     python bench.py --label fcfs                        # stock vLLM
     python bench.py --label voice --deadlines           # voice scheduler
     python bench.py --label voice+prefill --deadlines --prefill
+    python bench.py --label static --static-priority    # stock vLLM, --scheduling-policy priority
+    add --slo-mix 200,800 for two caller classes (sessions alternate between them)
     python bench.py --report results/*.json
 
 Standard library only. TTFT is measured from end of speech (the final transcript)
@@ -64,8 +66,18 @@ def prefill(args, msgs):
         pass
 
 
+def voice_priority(args, slo):
+    """What a voice turn sends in `priority`, or None for nothing."""
+    if args.deadlines:  # voice scheduler: the SLO itself
+        return slo
+    if args.static_priority:  # stock vLLM priority policy: lower runs first, tightest class = 0
+        return args.slos.index(slo)
+    return None
+
+
 def voice_session(args, sid, records):
     rng = random.Random(sid)
+    slo = args.slos[sid % len(args.slos)]
     time.sleep(rng.uniform(0, args.stagger_s))
     msgs = [
         {
@@ -94,9 +106,9 @@ def voice_session(args, sid, records):
             "stream": True,
             "stream_options": {"include_usage": True, "continuous_usage_stats": True},
         }
-        if args.deadlines:
-            body["priority"] = args.slo_ms
-        rec = {"sid": sid, "turn": turn, "after_barge": barged, "ttft": None,
+        if voice_priority(args, slo) is not None:
+            body["priority"] = voice_priority(args, slo)
+        rec = {"sid": sid, "turn": turn, "slo_ms": slo, "after_barge": barged, "ttft": None,
                "prompt": None, "cached": None, "barged": False, "err": None}
         barge_after = rng.uniform(0.2, 1.0) if rng.random() < args.barge_p else None
         reply, t0, t_first = [], time.perf_counter(), [None]
@@ -144,6 +156,8 @@ def batch_load(args, done, stop):
             "max_tokens": args.batch_max_tokens,
             "ignore_eos": True,
         }
+        if args.static_priority:  # below every voice class
+            body["priority"] = len(args.slos)
         try:
             out = post(args, body)
             if not stop.is_set():
@@ -165,7 +179,7 @@ def pct(xs, p):
 
 def summarize(args, records, batch_done, dur):
     def attain(rs):
-        ok = sum(1 for r in rs if r["ttft"] is not None and r["ttft"] * 1e3 <= args.slo_ms)
+        ok = sum(1 for r in rs if r["ttft"] is not None and r["ttft"] * 1e3 <= r["slo_ms"])
         return round(100 * ok / len(rs), 1) if rs else None
 
     ttft = [r["ttft"] * 1e3 for r in records if r["ttft"] is not None]
@@ -173,7 +187,7 @@ def summarize(args, records, batch_done, dur):
     return {
         "label": args.label,
         "batch_rps": args.batch_rps,
-        "slo_ms": args.slo_ms,
+        "slo_ms": ",".join(map(str, args.slos)),
         "turns": len(records),
         "errors": sum(1 for r in records if r["err"] and r["err"] != "ttft_timeout"),
         "ttft_timeouts": sum(1 for r in records if r["err"] == "ttft_timeout"),
@@ -181,6 +195,8 @@ def summarize(args, records, batch_done, dur):
         "slo_pct": attain(records),
         "slo_pct_first_turn": attain([r for r in records if r["turn"] == 0]),
         "slo_pct_after_barge": attain([r for r in records if r["after_barge"]]),
+        "slo_by_class": " ".join(f"{c}ms:{attain([r for r in records if r['slo_ms'] == c]):.0f}%"
+                                 for c in args.slos) if len(args.slos) > 1 else None,
         "ttft_p50_ms": round(pct(ttft, 50), 1),
         "ttft_p95_ms": round(pct(ttft, 95), 1),
         "ttft_p99_ms": round(pct(ttft, 99), 1),
@@ -193,14 +209,15 @@ def summarize(args, records, batch_done, dur):
 
 
 COLS = ["label", "batch_rps", "turns", "errors", "ttft_timeouts", "barge_ins", "slo_pct", "slo_pct_first_turn",
-        "slo_pct_after_barge", "ttft_p50_ms", "ttft_p95_ms", "ttft_p99_ms",
+        "slo_pct_after_barge", "slo_by_class", "ttft_p50_ms", "ttft_p95_ms", "ttft_p99_ms",
         "cached_prompt_pct", "batch_reqs_done", "batch_tok_per_s"]
 
 
 def report(summaries):
     width = max(len(c) for c in COLS)
+    w = max([14] + [len(str(s.get(c))) + 2 for s in summaries for c in COLS])
     for c in COLS:
-        print(c.ljust(width), *(str(s.get(c)).rjust(14) for s in summaries))
+        print(c.ljust(width), *(str(s.get(c)).rjust(w) for s in summaries))
 
 
 def main():
@@ -211,7 +228,10 @@ def main():
     ap.add_argument("--port", type=int, default=8000)
     ap.add_argument("--model", default=os.environ.get("MODEL", "Qwen/Qwen2.5-7B-Instruct"))
     ap.add_argument("--slo-ms", type=int, default=300, help="TTFT SLO for voice turns")
+    ap.add_argument("--slo-mix", help="SLO classes in ms, e.g. 200,800 or 200/800 (overrides --slo-ms)")
     ap.add_argument("--deadlines", action="store_true", help="send the SLO in `priority` (voice scheduler only)")
+    ap.add_argument("--static-priority", action="store_true",
+                    help="stock vLLM priority policy: voice classes 0..n-1 by tightness, batch n")
     ap.add_argument("--prefill", action="store_true", help="speculative prefill on partial transcripts")
     ap.add_argument("--prefill-every", type=int, default=3, help="words between speculative prefills")
     ap.add_argument("--prefill-slack-ms", type=int, default=1000)
@@ -231,7 +251,11 @@ def main():
     args = ap.parse_args()
 
     if args.report:
-        return report([json.load(open(f))["summary"] for f in args.report])
+        return report([json.load(open(f))["summary"] for f in args.report if os.path.exists(f)])
+    if args.deadlines and args.static_priority:
+        ap.error("--deadlines and --static-priority are different schedulers; pick one")
+    mix = args.slo_mix.replace("/", ",").split(",") if args.slo_mix else []
+    args.slos = sorted({int(x) for x in mix}) if mix else [args.slo_ms]
 
     records, batch_done, stop = [], [], threading.Event()
     t0 = time.perf_counter()
