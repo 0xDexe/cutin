@@ -1,0 +1,16 @@
+label                                fcfs                static           voice-nopin                 voice         voice+prefill
+batch_rps                             1.0                   1.0                   1.0                   1.0                   1.0
+turns                                  96                    96                    96                    96                    96
+errors                                  0                     0                     0                     0                     0
+ttft_timeouts                           0                     0                     0                     0                     0
+barge_ins                              46                    46                    46                    46                    46
+slo_pct                               7.3                  13.5                  14.6                  47.9                  69.8
+slo_pct_first_turn                   37.5                  43.8                  43.8                  37.5                  68.8
+slo_pct_after_barge                   0.0                   9.8                  14.6                  56.1                  70.7
+slo_by_class           200ms:0% 800ms:15%    200ms:0% 800ms:27%    200ms:0% 800ms:29%   200ms:29% 800ms:67%   200ms:48% 800ms:92%
+ttft_p50_ms                       12126.6                1115.6                1077.0                 606.4                 261.2
+ttft_p95_ms                       16772.7                3243.3                3065.8                2464.5                1048.0
+ttft_p99_ms                       16857.0                3671.6                3556.1                3942.8                1477.0
+cached_prompt_pct                     1.6                   3.2                   3.2                  75.0                  99.3
+batch_reqs_done                       173                   112                   114                    99                   101
+batch_tok_per_s                     222.1                 189.3                 192.2                 197.6                 194.8
